@@ -1,6 +1,7 @@
 
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:in_app_purchase/in_app_purchase.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:suynl/pages/SettingsStateless.dart';
@@ -153,7 +154,7 @@ class _MainPageState extends State<MainPage>{
                   onPressed: ()=>Navigator.pop(context,false),
                   child:  Text('No',style: TextStyle(color: myThemes.getColor(colorTheme)),)),
               TextButton(
-                  onPressed: ()=>Navigator.pop(context,true),
+                  onPressed: ()=>SystemNavigator.pop(),
                   child:  Text('Yes',style: TextStyle(color: myThemes.getColor(colorTheme)),)),
             ],
           )
@@ -174,11 +175,11 @@ class _MainPageState extends State<MainPage>{
             padding: EdgeInsets.zero,
             children: [
               UserAccountsDrawerHeader(
-                accountName: const Text('SUYNL',style: (TextStyle(fontWeight: FontWeight.bold)),),
-                accountEmail: const Text('Starting Up Your New Life'),
+                accountName: Text(clsApp.override_app_resources?'Mahalaga I':'SUYNL',style: (TextStyle(fontWeight: FontWeight.bold)),),
+                accountEmail: Text(clsApp.override_app_resources?'Jesus Christ Basic Foundation':'Starting Up Your New Life'),
                 currentAccountPicture: CircleAvatar(
                   child: ClipOval(
-                    child: Image.asset('assets/images/raw_icon.png'),
+                    child: Image.asset(clsApp.override_app_resources?'assets/images/raw_icon_alt.png':'assets/images/raw_icon.png'),
                   ),
                 ),
                 decoration: BoxDecoration(
@@ -226,7 +227,7 @@ class _MainPageState extends State<MainPage>{
                                 onPressed: ()=>Navigator.pop(context,false),
                                 child:  Text('No',style: TextStyle(color: myThemes.getColor(colorTheme)),)),
                             TextButton(
-                                onPressed: ()=>Navigator.pop(context,true),
+                                onPressed: ()=> SystemNavigator.pop(),
                                 child:  Text('Yes',style: TextStyle(color: myThemes.getColor(colorTheme)),)),
                           ],
                         )

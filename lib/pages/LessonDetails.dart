@@ -52,81 +52,63 @@ class _LessonDetailsState extends State<LessonDetails> {
 
     String fileName='';
 
-    if(language=='Cebuano'){
-      switch(lessonNo) {
-        case '0':
-          fileName = !isDarkMode ? "sl_00_pasiuna"+availableFontSize[_currentFontSize]+".html" : "sl_00_dark_pasiuna"+availableFontSize[_currentFontSize]+".html";
-          break;
-        case '1':
-          fileName = !isDarkMode ? "sl_01_kaluwasan"+availableFontSize[_currentFontSize]+".html" : "sl_01_dark_kaluwasan"+availableFontSize[_currentFontSize]+".html";
-          break;
-        case '2':
-          fileName = !isDarkMode ? "sl_02_paghinulsol"+availableFontSize[_currentFontSize]+".html" : "sl_02_dark_paghinulsol"+availableFontSize[_currentFontSize]+".html";
-          break;
-        case '3':
-          fileName = !isDarkMode ? "sl_03_ang_pagka_ginoo_ni_jesus"+availableFontSize[_currentFontSize]+".html" : "sl_03_dark_ang_pagka_ginoo_ni_jesus"+availableFontSize[_currentFontSize]+".html";
-          break;
-        case '4':
-          fileName = !isDarkMode ? "sl_04_kapasayloan"+availableFontSize[_currentFontSize]+".html" : "sl_04_dark_kapasayloan"+availableFontSize[_currentFontSize]+".html";
-          break;
-        case '5':
-          fileName = !isDarkMode ? "sl_05_upat_ka_mahinungdanong_panagtigum"+availableFontSize[_currentFontSize]+".html" : "sl_05_dark_upat_ka_mahinungdanong_panagtigum"+availableFontSize[_currentFontSize]+".html";
-          break;
-        case '6':
-          fileName = !isDarkMode ? "sl_06_devotional_life"+availableFontSize[_currentFontSize]+".html" : "sl_06_dark_devotional_life"+availableFontSize[_currentFontSize]+".html";
-          break;
-        case '7':
-          fileName = !isDarkMode ? "sl_07_ang_imong_aktibong_kinabuhi_sa_pag_ampo"+availableFontSize[_currentFontSize]+".html" : "sl_07_dark_ang_imong_aktibong_kinabuhi_sa_pag_ampo"+availableFontSize[_currentFontSize]+".html";
-          break;
-        case '8':
-          fileName = !isDarkMode ? "sl_08_bag_ong_kinabuhi"+availableFontSize[_currentFontSize]+".html" : "sl_08_dark_bag_ong_kinabuhi"+availableFontSize[_currentFontSize]+".html";
-          break;
-        case '9':
-          fileName = !isDarkMode ? "sl_09_kinabuhi_sa_pagkamatinumanon"+availableFontSize[_currentFontSize]+".html" : "sl_09_dark_kinabuhi_sa_pagkamatinumanon"+availableFontSize[_currentFontSize]+".html";
-          break;
-        case '10':
-          fileName =  !isDarkMode ? "sl_10_pakig_uban_sa_magtutuo"+availableFontSize[_currentFontSize]+".html" : "sl_10_dark_pakig_uban_sa_magtutuo"+availableFontSize[_currentFontSize]+".html";
-          break;
-      }
-      return "Cebuano/" + fileName;
-    }else{
       switch(lessonNo) {
         case '0':
           fileName = !isDarkMode ? "sl_00_introduction"+availableFontSize[_currentFontSize]+".html" : "sl_00_dark_introduction"+availableFontSize[_currentFontSize]+".html";
+          //fileName = "ex_00_pasiuna_alt.html";
           break;
         case '1':
           fileName = !isDarkMode ? "sl_01_salvation"+availableFontSize[_currentFontSize]+".html" : "sl_01_dark_salvation"+availableFontSize[_currentFontSize]+".html";
+          //fileName = "ex_01_patukuranan_alt.html";
           break;
         case '2':
           fileName = !isDarkMode ? "sl_02_repentance"+availableFontSize[_currentFontSize]+".html" : "sl_02_dark_repentance"+availableFontSize[_currentFontSize]+".html";
+          //fileName = "ex_02_kinabuhi_human_sa_kamatayon_alt.html";
           break;
         case '3':
           fileName = !isDarkMode ? "sl_03_lordship"+availableFontSize[_currentFontSize]+".html" : "sl_03_dark_lordship"+availableFontSize[_currentFontSize]+".html";
+          //fileName = "ex_03_kaluwasan_alt.html";
           break;
         case '4':
           fileName = !isDarkMode ? "sl_04_forgiveness"+availableFontSize[_currentFontSize]+".html" : "sl_04_dark_forgiveness"+availableFontSize[_currentFontSize]+".html";
+          //fileName = "ex_04_usa_lang_ka_dalan_alt.html";
           break;
         case '5':
           fileName = !isDarkMode ? "sl_05_the_4_greatest_meetings"+availableFontSize[_currentFontSize]+".html" : "sl_05_dark_the_4_greatest_meetings"+availableFontSize[_currentFontSize]+".html";
+          //fileName = "ex_05_pagkatawo_pagusab_alt.html";
           break;
         case '6':
-          fileName = !isDarkMode ? "sl_06_devotional_life"+availableFontSize[_currentFontSize]+".html" : "sl_06_dark_devotional_life"+availableFontSize[_currentFontSize]+".html";
+          fileName = !isDarkMode ? "sl_06_devotional_life"+availableFontSize[_currentFontSize]+".html" : "sl_dark_06_devotional_life"+availableFontSize[_currentFontSize]+".html";
+          //fileName = "ex_06_tulo_ka_aspeto_sa_kaluwasan_alt.html";
           break;
         case '7':
           fileName = !isDarkMode ? "sl_07_your_active_life_prayer"+availableFontSize[_currentFontSize]+".html" : "sl_07_dark_your_active_life_prayer"+availableFontSize[_currentFontSize]+".html";
+          //fileName = "ex_07_mga_pangutana_mahitungod_sa_kaluwasan_alt.html";
           break;
         case '8':
           fileName = !isDarkMode ? "sl_08_sharing_your_new_life_with_others"+availableFontSize[_currentFontSize]+".html" : "sl_08_dark_sharing_your_new_life_with_others"+availableFontSize[_currentFontSize]+".html";
+          //fileName = "ex_08_kaluwasan_mawala_ba_o_dili_na_alt.html";
           break;
         case '9':
           fileName = !isDarkMode ? "sl_09_life_of_obedience"+availableFontSize[_currentFontSize]+".html" : "sl_09_dark_life_of_obedience"+availableFontSize[_currentFontSize]+".html";
+          //fileName = "ex_09_ang_plano_sa_dios_alt.html";
           break;
         case '10':
           fileName =  !isDarkMode ? "sl_10_life_in_the_church"+availableFontSize[_currentFontSize]+".html" : "sl_10_dark_life_in_the_church"+availableFontSize[_currentFontSize]+".html";
+          //fileName = "ex_10_paglakaw_uban_sa_dios_alt.html";
+          break;
+        case '11':
+          fileName =  !isDarkMode ? "ex_11_pito_ka_timailhan"+availableFontSize[_currentFontSize]+".html" : "ex_11_dark_pito_ka_timailhan"+availableFontSize[_currentFontSize]+".html";
+          //fileName = "ex_11_pito_ka_timailhan_alt.html";
+          break;
+        case '12':
+          fileName =  !isDarkMode ? "ex_12_pagkaginoo"+availableFontSize[_currentFontSize]+".html" : "ex_12_dark_pagkaginoo"+availableFontSize[_currentFontSize]+".html";
+          //fileName = "ex_12_pagkaginoo_alt.html";
           break;
       }
-      return "English/" + fileName;
-    }
+      print(language + "/" + fileName);
+      return language + "/" + fileName;
+
   }
 
 
@@ -222,7 +204,7 @@ class _LessonDetailsState extends State<LessonDetails> {
       ),
       body:  Column(children: [
         Expanded(child: WebViewWidget(controller: _controller,)),
-        BannerAds()
+        // BannerAds()
       ]),
     );
   }

@@ -41,17 +41,18 @@ class _BookletState extends State<Booklet>{
 
       if(language=='English')
       {lesson = [
-        Lesson(lessonNo: '0',title: 'INTRODUCTION',subTitle: 'Pasiuna',color: colorTheme,language:language),
-        Lesson(lessonNo: '1',title: 'SALVATION',subTitle: 'Kaluwasan',color: colorTheme,language:language),
-        Lesson(lessonNo: '2',title: 'REPENTANCE',subTitle: 'Paghinulsol',color: colorTheme,language:language),
-        Lesson(lessonNo: '3',title: 'LORDSHIP',subTitle: 'Ang Pagka Ginoo Ni Jesus',color: colorTheme,language:language),
-        Lesson(lessonNo: '4',title: 'FORGIVENESS',subTitle: 'Pagpasaylo',color: colorTheme,language:language),
-        Lesson(lessonNo: '5',title: 'THE 4 GREATEST MEETINGS',subTitle: '4 Ka Mahinongdanong Panagtigum',color: colorTheme,language:language),
+        Lesson(lessonNo: '0',title: 'INTRODUCTION',subTitle: 'Introduction',color: colorTheme,language:language),
+        Lesson(lessonNo: '1',title: 'SALVATION',subTitle: 'Salvation',color: colorTheme,language:language),
+        Lesson(lessonNo: '2',title: 'REPENTANCE',subTitle: 'Repentance',color: colorTheme,language:language),
+        Lesson(lessonNo: '3',title: 'LORDSHIP',subTitle: 'Lordship',color: colorTheme,language:language),
+        Lesson(lessonNo: '4',title: 'FORGIVENESS',subTitle: 'Forgiveness',color: colorTheme,language:language),
+        Lesson(lessonNo: '5',title: 'THE 4 GREATEST MEETINGS',subTitle: 'The 4 Greatest Meetings',color: colorTheme,language:language),
         Lesson(lessonNo: '6',title: 'DEVOTIONAL LIFE',subTitle: 'Devotional Life',color: colorTheme,language:language),
-        Lesson(lessonNo: '7',title: 'YOUR ACTIVE LIFE PRAYER',subTitle: 'Ang Imong Aktibong Kinabuhi Sa Pag-Ampo',color: colorTheme,language:language),
-        Lesson(lessonNo: '8',title: 'SHARING YOUR NEW LIFE WITH OTHERS',subTitle: 'Bag-Ong Kinabuhi',color: colorTheme,language:language),
-        Lesson(lessonNo: '9',title: 'LIFE OF OBEDIENCE',subTitle: 'Kinabuhi Sa Pagkamatinumanon',color: colorTheme,language:language),
-        Lesson(lessonNo: '10',title: 'LIFE IN THE CHURCH',subTitle: 'Pakig-Uban Sa Magtutotoo',color: colorTheme,language:language),
+        Lesson(lessonNo: '7',title: 'YOUR ACTIVE LIFE PRAYER',subTitle: 'Your Active Life Prayer',color: colorTheme,language:language),
+        Lesson(lessonNo: '8',title: 'SHARING YOUR NEW LIFE WITH OTHERS',subTitle: 'Sharing Your New Life With Others',color: colorTheme,language:language),
+        Lesson(lessonNo: '9',title: 'LIFE OF OBEDIENCE',subTitle: 'Life Of Obedience',color: colorTheme,language:language),
+        Lesson(lessonNo: '10',title: 'FELLOWSHIP WITH BELIEVERS',subTitle: 'Life In The Church',color: colorTheme,language:language),
+
       ];}
       else
       {lesson = [
@@ -128,9 +129,10 @@ class _BookletState extends State<Booklet>{
                                   setState(() {
 
                                     adClickCount++;
-                                    if(adClickCount>3){
+                                    if(adClickCount>7){
                                       adClickCount=0;
-                                      AppOpenAds.loadAd();
+                                      //AppOpenAds.loadAd();
+                                      InterstitialAds.load();
                                     }
                                     updateAdClickCount();
                                     print('adCount=' + adClickCount.toString());

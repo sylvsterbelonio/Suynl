@@ -131,10 +131,10 @@ class SettingsStateless extends StatelessWidget {
                         });
                       }
                       else if(e.title=='Privacy Policy'){
-                        _launchUrl('https://lpz.zithvirtualsolutions.com/suynl/privacy-policy');
+                        _launchUrl('https://api.livingpraiseofzion.org/suynl/privacy-policy');
                       }
                       else if(e.title=='Terms & Condition'){
-                        _launchUrl('https://lpz.zithvirtualsolutions.com/suynl/terms-and-conditions');
+                        _launchUrl('https://api.livingpraiseofzion.org/terms-and-conditions');
                       }
                   },
                 buyAction: buyAction,

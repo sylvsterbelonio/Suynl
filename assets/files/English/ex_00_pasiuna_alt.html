@@ -1,0 +1,120 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+  <head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <title></title>
+  <style>
+                        *{font-family: Arial, Geneva, Helvetica, sans-serif}
+                        .text-default {color :#757575} 
+                        .text-primary { color: #660000;}
+                        .text-error { color: #dc3545;}
+                        .text-success {color: #198754}
+                        .text-secondary {color: #757575;}
+                        .text-super-light-primary { color: #e11919 }
+                        .text-light-primary { color: #8b0000 }
+                        .font-italic { font-style: italic; } 
+                        .font-bold { font-weight: bold; } 
+                         body { width:100%; background-color: #FFF3F0;margin: 0px; padding: 0px; height: 100%;; font-size:16px} 
+                        .content{  padding: 1px 20px 20px 15px; } 
+                        .indent{margin-left:40px} 
+                        .j{text-align:justify;} 
+                        .i{font-style: italic;}
+                        .c {text-align:center}
+                        .p{text-align: justify;} 
+                        .headings{background-color: #D3D3D3;padding:8px} 
+                        .column { float: left; width: 50%; padding: 0px; }
+                        .row:after { content: ""; display: table; clear: both; }
+                        .mb-0{ margin-bottom:0dp; }
+                        .row{ padding-top:20px;margin-bottom:20px; }  
+                        .mt-1 {margin-top:10dp;}
+                        .verses{ display:none}
+                        .button-verse{width:30px;height:30px;background-color:#f9cece;border-color: #00000;display:inline;padding:3px;color:black}
+                        .button-verse-ext{display:inline;}
+                        .text-sm {font-size:10px;}
+                        .highlight-verse{background-color:#fff7bf;color:black}
+                        .bullet-none{list-style:none}
+                        span{text-align:justify}
+                        .sj{text-align: justify; display:block;}                           
+                        hide {    transition: 1s ease height;  }
+                        show {    transition: 1s ease height; }
+                        
+  </style>
+  <script>
+                        var normal_color = "#000000";  var normal_color_background = "#f9cece";  var active_color = "#ffffff";  var active_color_background = "#8b0000";
+  </script>
+  </head>
+  <body>
+    <div class="content">
+
+    <h3 class="headings" align=center><span class="text-light-primary">Lpz Simbalay </span></H3>
+        
+    <p class="c">
+    <b>10 Lessons for the Cell Groups</b>
+    </p>
+    <p class="c">
+    by: Noel P. Alkuino
+    </p>
+    
+    <ol type="1">
+     <li><p class="j">Foundation</p></li>
+      <li><p class="j">Life After Death</p></li>
+       <li><p class="j">Safety</p></li>
+       <li><p class="j">Only One Way</p></li>
+        <li><p class="j">Rebirth</p></li>
+         <li><p class="j">Three Aspects of Safety</p></li>
+          <li><p class="j">Questions About Safety</p></li>
+           <li><p class="j">Safety: To Disappear or Not?</p></li>
+            <li><p class="j">God's Plan</p></li>
+              <li><p class="j">Being With God</p></li>
+               <li><p class="j"></p>Seven Signs of a Saved Person</li>
+                <li><p class="j"></p>Lordship </li>
+ </ol>
+
+
+<p class="c">
+Vision for the Multitudes 
+</p>
+
+
+  
+    </div>
+  </body>
+</html>
+
+<script>
+
+    function showLabelVerse(panel, verses, content){
+    showVerse(panel,verses, content);
+    }
+    
+    function showVerse(parent,verses, content) {   
+    
+      if (verses.style.display === "none") {
+        verses.style.display = "block";
+        parent.innerHTML="[-]";
+        parent.style.backgroundColor = active_color_background;
+        parent.style.color = active_color;
+        content.style.backgroundColor = active_color_background;
+        content.style.color = active_color;
+       
+        }
+      else if(verses.style.display ===""){
+        verses.style.display = "block";
+        parent.innerHTML="[-]";
+        parent.style.backgroundColor = active_color_background;
+        parent.style.color = active_color;
+        content.style.backgroundColor = active_color_background;
+        content.style.color = active_color;
+    
+      } else {
+        verses.style.display = "none";
+        parent.innerHTML="[+]";
+        parent.style.backgroundColor = normal_color_background;
+        parent.style.color = normal_color;
+        content.style.backgroundColor = normal_color_background;
+        content.style.color = normal_color;
+     
+      }
+    }
+</script>

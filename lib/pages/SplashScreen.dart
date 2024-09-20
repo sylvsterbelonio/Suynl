@@ -5,6 +5,7 @@ import 'package:suynl/pages/MainPage.dart';
 import 'package:suynl/pages/Settings.dart';
 import 'package:suynl/classes/Themes.dart';
 import 'package:suynl/classes/clsApp.dart';
+import 'package:suynl/widgets/ads/AppOpenAds.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -27,6 +28,7 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
     loadThemeData();
     super.initState();
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersive);
+    AppOpenAds.loadAd();
     Future.delayed(Duration(seconds: 3),(){
       Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (_) => MainPage()));
     }
@@ -60,12 +62,13 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
                 width: 54.0,
                 height: 54.0,
                 child: ClipOval(
-                  child: Image.asset('assets/images/raw_icon.png'),
+                  child: Image.asset(clsApp.override_app_resources?'assets/images/raw_icon_alt.png':'assets/images/raw_icon.png'),
                 ),
               ),
-              const Center(
-                child: Text('Starting Up Your New Life',
-                  style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold,color:Colors.white,fontStyle: FontStyle.normal),),
+               Center(
+                child:
+                Text(clsApp.override_app_resources?'Mahalaga I':'Starting Up Your New Life',
+                  style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold,color:Colors.white,fontStyle: FontStyle.normal),)
               ),
             ]
 
