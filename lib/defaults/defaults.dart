@@ -4,14 +4,16 @@ class Defaults{
   static final Color? drawerItemSelectedColor = Colors.red[700];
 
   static final drawerItemText = [
-    'Booklet',
+    'Content',
     'Settings',
+    'More Apps',
     'Exit'
   ];
 
   static final drawerItemIcon = [
     Icons.book,
     Icons.settings,
+    Icons.apps,
     Icons.exit_to_app
   ];
 

@@ -1,5 +1,6 @@
 
 import 'dart:async';
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:in_app_purchase/in_app_purchase.dart';
@@ -11,6 +12,7 @@ import 'package:suynl/pages/Settings.dart';
 import 'package:suynl/classes/Themes.dart';
 import 'package:suynl/classes/clsApp.dart';
 import 'package:suynl/widgets/ads/BannerAds.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 var indexClicked = 0;
 var appBarTitle = 'Booklet';
@@ -207,7 +209,6 @@ class _MainPageState extends State<MainPage>{
                     style: TextStyle(color: indexClicked ==1 ? myThemes.getColor(colorTheme) : Defaults.drawerItemColor),),
                   onTap: clickDrawer(1)
               ),
-              const Divider(),
               ListTile(
                 leading: Icon(
                     Defaults.drawerItemIcon[2],
@@ -215,6 +216,35 @@ class _MainPageState extends State<MainPage>{
                 title: Text(
                   Defaults.drawerItemText[2],
                   style: TextStyle(color: indexClicked ==2 ? myThemes.getColor(colorTheme) : Defaults.drawerItemColor),),
+                onTap: (){
+                  setState(() {
+                    Navigator.pop(context);
+
+                    if (Platform.isAndroid || Platform.isIOS) {
+                      final appId = Platform.isAndroid ? 'YOUR_ANDROID_PACKAGE_ID' : 'YOUR_IOS_APP_ID';
+                      final url = Uri.parse(
+                        Platform.isAndroid
+                        //? "https://play.google.com/store/search?q=pub%3ALPZ%20Developer&c=apps"
+                            ? "https://play.google.com/store/search?q=pub%3AChrist%20Mindset&c=apps"
+                            : "https://apps.apple.com/app/id$appId",
+                      );
+                      launchUrl(
+                        url,
+                        mode: LaunchMode.externalApplication,
+                      );
+                    }
+
+                  });
+                },
+              ),
+              const Divider(),
+              ListTile(
+                leading: Icon(
+                    Defaults.drawerItemIcon[3],
+                    color: indexClicked ==3 ? myThemes.getColor(colorTheme) : Defaults.drawerItemColor),
+                title: Text(
+                  Defaults.drawerItemText[3],
+                  style: TextStyle(color: indexClicked ==3 ? myThemes.getColor(colorTheme) : Defaults.drawerItemColor),),
                 onTap: (){
                   setState(() {
                     Navigator.pop(context);
