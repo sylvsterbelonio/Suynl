@@ -13,135 +13,22 @@ class LessonCardTemplate extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
-    if(appMode=='trial'){
-      if(lesson.lessonNo=='1' || lesson.lessonNo=='2' || lesson.lessonNo=='3' || lesson.lessonNo=='4' || lesson.lessonNo=='5') {
-        return Card(
-          elevation: 5.0,
-          shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(5.0)
-          ),
-          child: InkWell(
-            onTap:
-            openLesson
-            ,
-            child: Container(
-              width: MediaQuery.of(context).size.width,
-              height: 50,
-              padding: const EdgeInsets.symmetric(horizontal: 0.0, vertical: 0.0),
-              child:  Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 20.0,vertical: 5.0),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.only(
-                          topLeft: Radius.circular(5.0),
-                          bottomLeft: Radius.circular(5.0)),
-                      color: myThemes.getLightColor(lesson.color),
-                    ),
-                    child: Center(
-                        child:
-                        SizedBox(
-                          width: 24.0,
-                          child: Center(
-                            child: Text(lesson.lessonNo,
-                              style: const TextStyle(fontWeight: FontWeight.bold,fontSize: 20.0, color: Colors.white),),
-                          ),
-                        )),
-                  ),
-                  Expanded(
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 5.0),
-                      child:  Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Flexible(child: Text(lesson.title,overflow: TextOverflow.ellipsis, style: TextStyle(fontWeight: FontWeight.bold,fontSize: 16, color: myThemes.getColor(lesson.color)),)),
-
-                        ],
-                      ),
-                    ),
-                  ),
-                  const Icon(
-                      Icons.keyboard_arrow_right_outlined
-                  ),
-                ],
-              ),
-            ),
-          ),
-        );
-      }else{
-        return Card(
-          elevation: 5.0,
-          shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(5.0)
-          ),
-          child: InkWell(
-            onTap:
-            openLesson
-            ,
-            child: Container(
-              width: MediaQuery.of(context).size.width,
-              height: 50,
-              padding: const EdgeInsets.symmetric(horizontal: 0.0, vertical: 0.0),
-              child:  Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 20.0,vertical: 5.0),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.only(
-                          topLeft: Radius.circular(5.0),
-                          bottomLeft: Radius.circular(5.0)),
-                      color: myThemes.getLightColor(lesson.color),
-                    ),
-                    child: Center(
-                        child:
-                        SizedBox(
-                          width: 24.0,
-                          child: Center(
-                            child: Text(lesson.lessonNo,
-                              style: const TextStyle(fontWeight: FontWeight.bold,fontSize: 20.0, color: Colors.white),),
-                          ),
-                        )),
-                  ),
-                  Expanded(
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 5.0),
-                      child:  Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(lesson.title, style: TextStyle(fontWeight: FontWeight.bold,fontSize: 16, color: myThemes.getColor(lesson.color)),),
-                          Text(lesson.subTitle)
-                        ],
-                      ),
-                    ),
-                  ),
-                  Center(child: Text('Lock',style: TextStyle(color: Colors.grey,fontStyle: FontStyle.italic),)),
-                  const Icon(
-                      Icons.keyboard_arrow_right_outlined
-                  ),
-                ],
-              ),
-            ),
-          ),
-        );
-      }
-    }else{
-      return Card(
-        elevation: 5.0,
-        shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(5.0)
+    double width = MediaQuery.of(context).size.width;
+    var isDarkMode = MediaQuery.of(context).platformBrightness == Brightness.dark;
+    return InkWell(
+      onTap: openLesson,
+      child: Container(
+        decoration: BoxDecoration(
+          border: Border(
+            bottom: BorderSide(
+              color: Colors.grey.withOpacity(isDarkMode?0.1:0.4)
+            )
+          )
         ),
-        child: InkWell(
-          onTap:
-          openLesson
-          ,
-          child: Container(
+        child: ListTile(
+          contentPadding: EdgeInsets.all(0),
+
+          title: Container(
             width: MediaQuery.of(context).size.width,
             height: 50,
             padding: const EdgeInsets.symmetric(horizontal: 0.0, vertical: 0.0),
@@ -149,23 +36,28 @@ class LessonCardTemplate extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 20.0,vertical: 5.0),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(5.0),
-                        bottomLeft: Radius.circular(5.0)),
-                    color: myThemes.getLightColor(lesson.color),
+                Padding(
+                  padding: EdgeInsets.only(left: 4),
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 20.0,vertical: 5.0),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.only(
+                          topRight: Radius.circular(10.0),
+                          bottomRight: Radius.circular(10.0),
+                          topLeft: Radius.circular(10.0),
+                          bottomLeft: Radius.circular(10.0)),
+                      color: myThemes.getLightColor(lesson.color),
+                    ),
+                    child: Center(
+                        child:
+                        SizedBox(
+                          width: 24.0,
+                          child: Center(
+                            child: Text(lesson.lessonNo,
+                              style: const TextStyle(fontWeight: FontWeight.bold,fontSize: 20.0, color: Colors.white),),
+                          ),
+                        )),
                   ),
-                  child: Center(
-                      child:
-                      SizedBox(
-                        width: 24.0,
-                        child: Center(
-                          child: Text(lesson.lessonNo,
-                            style: const TextStyle(fontWeight: FontWeight.bold,fontSize: 18.0, color: Colors.white),),
-                        ),
-                      )),
                 ),
                 Expanded(
                   child: Container(
@@ -174,8 +66,9 @@ class LessonCardTemplate extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(lesson.title,overflow: TextOverflow.ellipsis, style: TextStyle(fontWeight: FontWeight.bold,fontSize: 16, color: myThemes.getColor(lesson.color)),),
-                        Text(lesson.subTitle,overflow: TextOverflow.ellipsis,style: TextStyle(fontStyle: FontStyle.italic),)
+                        Text(lesson.title, overflow: TextOverflow.ellipsis,maxLines: 1,   style: TextStyle(fontWeight: FontWeight.bold,fontSize: 16, color: myThemes.getColor(lesson.color)),),
+                        Row(children:[
+                          Expanded(child: Text(lesson.subTitle,overflow: TextOverflow.ellipsis,maxLines: 1,style: TextStyle(fontSize: width * 0.025,fontStyle: FontStyle.italic), ))])
                       ],
                     ),
                   ),
@@ -187,8 +80,9 @@ class LessonCardTemplate extends StatelessWidget {
             ),
           ),
         ),
-      );
-    }
+      ),
+    );
+
 
     return Text('');
 

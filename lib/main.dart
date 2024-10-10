@@ -1,6 +1,8 @@
 
 import 'package:flutter/material.dart';
+import 'package:get/get_navigation/src/root/get_material_app.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
+import 'package:suynl/classes/sql/sqlHelper.dart';
 import 'package:suynl/pages/FontSettings.dart';
 import 'package:suynl/pages/SplashScreen.dart';
 import 'package:suynl/pages/MainPage.dart';
@@ -10,9 +12,10 @@ void main() async{
 
   WidgetsFlutterBinding.ensureInitialized();
   MobileAds.instance.initialize();
+  sqlHelper.initDefaultDB;
 
   runApp(
-      MaterialApp(
+      GetMaterialApp(
           debugShowCheckedModeBanner: false,
           themeMode: ThemeMode.system,
           theme: ThemeData.light(),

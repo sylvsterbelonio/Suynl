@@ -3,8 +3,11 @@ import 'dart:async';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:in_app_purchase/in_app_purchase.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:suynl/classes/sql/sqlHelper.dart';
+import 'package:suynl/controller/SOL2Controller.dart';
 import 'package:suynl/pages/SettingsStateless.dart';
 import 'package:suynl/pages/booklet.dart';
 import 'package:suynl/defaults/defaults.dart';
@@ -13,57 +16,30 @@ import 'package:suynl/classes/Themes.dart';
 import 'package:suynl/classes/clsApp.dart';
 import 'package:suynl/widgets/ads/BannerAds.dart';
 import 'package:url_launcher/url_launcher.dart';
-
 var indexClicked = 0;
 var appBarTitle = 'Booklet';
 GlobalKey gk= GlobalKey();
-
 class MainPage extends StatefulWidget {
   const MainPage({super.key});
   @override
   State<MainPage> createState() => _MainPageState();
 }
-
-
-
 class _MainPageState extends State<MainPage>{
-
+  late bool isOnline=false;
+  late bool has_tagalog = false;
+  late bool has_cebuano = false;
+  final SOL2Controller _sol1Controller = Get.put(SOL2Controller());
   late List<Widget> pages = [
     Booklet(),
-    SettingsStateless(colorTheme: colorTheme, selectedLanguage: loadSelectedLanguage, selectedColor: loadThemeData,appMode: appMode,language: language,),
+    SettingsStateless(colorTheme: colorTheme, selectedLanguage: loadSelectedLanguage, selectedColor: loadThemeData,appMode: appMode,language: _sol1Controller.language.value,has_tagalog: has_tagalog,has_cebuano: has_cebuano,has_network: isOnline,),
     const Center(child: Text('exit'),
     )];
   late String appMode='trial';
   late Widget bannerAds = BannerAds();
   String language = 'English';
 
-  void loadAppPurchase() async{
-    final bool available = await InAppPurchase.instance.isAvailable();
-    if (available) {
-      // The store cannot be reached or accessed. Update the UI accordingly.
-      print('yes');
-    }else{
-      print('sorry no');
-    }
-
-    // Set literals require Dart 2.2. Alternatively, use
-// `Set<String> _kIds = <String>['product1', 'product2'].toSet()`.
-    const Set<String> _kIds = <String>{'Premium'};
-    final ProductDetailsResponse response =
-    await InAppPurchase.instance.queryProductDetails(_kIds);
-    if (response.notFoundIDs.isNotEmpty) {
-      print('wala jud');
-    }
-    List<ProductDetails> products = response.productDetails;
-
-    setState(() {
-      print('===>' + products.toString());
-    });
-  }
-
   @override
   void initState(){
-    loadAppPurchase();
     initTheme();
     super.initState();
   }
@@ -79,10 +55,14 @@ class _MainPageState extends State<MainPage>{
       colorTheme = prefs.getString('colorThemes') ?? clsApp.defaultThemeColor;
       appMode = prefs.getString('appMode') ?? clsApp.DEFAULT_APP_MODE;
       language = prefs.getString('defaultLanguage') ?? clsApp.defaultLanguage;
+      _sol1Controller.language.value = language;
 
+      has_tagalog = await sqlHelper.checkMaterialBookIfExist(20);
+      has_cebuano = await sqlHelper.checkMaterialBookIfExist(4);
+      isOnline = await hasNetwork();
       pages = [
         Booklet(),
-        SettingsStateless(colorTheme: colorTheme, selectedLanguage: loadSelectedLanguage, selectedColor: loadThemeData,appMode: appMode,language: language,),
+        SettingsStateless(colorTheme: colorTheme, selectedLanguage: loadSelectedLanguage, selectedColor: loadThemeData,appMode: appMode,language: _sol1Controller.language.value,has_tagalog: has_tagalog,has_cebuano: has_cebuano,has_network: isOnline,),
         const Center(child: Text('exit'),
         )
       ];
@@ -96,10 +76,13 @@ class _MainPageState extends State<MainPage>{
     await prefs.setString('colorThemes', selectedColor);
     language = prefs.getString('defaultLanguage') ?? clsApp.defaultLanguage;
     colorTheme = selectedColor;
+    isOnline = await hasNetwork();
+    has_tagalog = await sqlHelper.checkMaterialBookIfExist(20);
+    has_cebuano = await sqlHelper.checkMaterialBookIfExist(4);
 
     pages = [
      Booklet(),
-     SettingsStateless(colorTheme: colorTheme, selectedLanguage: loadSelectedLanguage, selectedColor: loadThemeData,appMode: appMode,language: language,),
+     SettingsStateless(colorTheme: colorTheme, selectedLanguage: loadSelectedLanguage, selectedColor: loadThemeData,appMode: appMode,language: language,has_tagalog: has_tagalog,has_cebuano: has_cebuano,has_network: isOnline,),
      const Center(child: Text('exit'),
       )
     ];
@@ -109,6 +92,15 @@ class _MainPageState extends State<MainPage>{
     });
   }
 
+  Future<bool> hasNetwork() async {
+    try {
+      final result = await InternetAddress.lookup('example.com');
+      return result.isNotEmpty && result[0].rawAddress.isNotEmpty;
+    } on SocketException catch (_) {
+      return false;
+    }
+  }
+
   void loadSelectedLanguage(String selectedLanguage) async {
 
     final SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -116,10 +108,13 @@ class _MainPageState extends State<MainPage>{
     appMode = prefs.getString('appMode') ?? clsApp.DEFAULT_APP_MODE;
     language = prefs.getString('defaultLanguage') ?? clsApp.defaultLanguage;
     language = selectedLanguage;
+    has_tagalog = await sqlHelper.checkMaterialBookIfExist(20);
+    has_cebuano = await sqlHelper.checkMaterialBookIfExist(4);
+    isOnline = await hasNetwork();
 
     pages = [
       Booklet(),
-      SettingsStateless(colorTheme: colorTheme, selectedLanguage: loadSelectedLanguage, selectedColor: loadThemeData,appMode: appMode,language: language,),
+      SettingsStateless(colorTheme: colorTheme, selectedLanguage: loadSelectedLanguage, selectedColor: loadThemeData,appMode: appMode,language: _sol1Controller.language.value,has_tagalog: has_tagalog,has_cebuano: has_cebuano,has_network: isOnline,),
       const Center(child: Text('exit'),
       )
     ];
@@ -177,8 +172,8 @@ class _MainPageState extends State<MainPage>{
             padding: EdgeInsets.zero,
             children: [
               UserAccountsDrawerHeader(
-                accountName: Text(clsApp.override_app_resources?'Mahalaga I':'SUYNL',style: (TextStyle(fontWeight: FontWeight.bold)),),
-                accountEmail: Text(clsApp.override_app_resources?'Jesus Christ Basic Foundation':'Starting Up Your New Life'),
+                accountName: Text(clsApp.override_app_resources?'Mahalaga I':'SUYNL v1.0.2',style: (TextStyle(fontWeight: FontWeight.bold)),),
+                accountEmail: Text(clsApp.override_app_resources?'Jesus Christ Basic Foundation':'Starting Up Your New Life',style: TextStyle(fontSize: 12),),
                 currentAccountPicture: CircleAvatar(
                   child: ClipOval(
                     child: Image.asset(clsApp.override_app_resources?'assets/images/raw_icon_alt.png':'assets/images/raw_icon.png'),

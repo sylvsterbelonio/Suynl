@@ -12,8 +12,11 @@ class SettingsStateless extends StatelessWidget {
   final Function selectedLanguage;
   final String appMode;
   final String language;
+  final bool has_tagalog;
+  final bool has_cebuano;
+  final bool has_network;
 
-  const SettingsStateless({super.key,required this.colorTheme,required this.selectedLanguage,required this.selectedColor,required this.appMode,required this.language});
+  const SettingsStateless({super.key,required this.colorTheme,required this.selectedLanguage,required this.selectedColor,required this.appMode,required this.language, required this.has_tagalog, required this.has_cebuano, required this.has_network});
 
   @override
   Widget build(BuildContext context) {
@@ -41,7 +44,7 @@ class SettingsStateless extends StatelessWidget {
 
     if(appMode=='trial'){
       clsSettings = [
-        clsSetting(icon: 'language',title: 'Language', rightBox: language,color: colorTheme),
+        //clsSetting(icon: 'language',title: 'Language', rightBox: language,color: colorTheme),
         clsSetting(icon: 'theme',title: 'Theme:', rightBox: 'yes',color: colorTheme),
         clsSetting(icon: 'locker',title: 'Privacy Policy', rightBox: '',color: colorTheme),
         clsSetting(icon: 'exclamation',title: 'Terms & Condition', rightBox: '',color: colorTheme),
@@ -51,7 +54,7 @@ class SettingsStateless extends StatelessWidget {
     }
     else {
       clsSettings = [
-        clsSetting(icon: 'language',title: 'Language', rightBox: language,color: colorTheme),
+        //clsSetting(icon: 'language',title: 'Language', rightBox: language,color: colorTheme),
         clsSetting(icon: 'theme',title: 'Theme:', rightBox: 'yes',color: colorTheme),
         clsSetting(icon: 'locker',title: 'Privacy Policy', rightBox: '',color: colorTheme),
         clsSetting(icon: 'exclamation',title: 'Terms & Condition', rightBox: '',color: colorTheme),
@@ -91,8 +94,9 @@ class SettingsStateless extends StatelessWidget {
       clsThemeColor(title: options[7], groupValue: colorTheme),
     ];
     List<clsThemeColor> cls_language = [
-      clsThemeColor(title: 'Cebuano', groupValue: language),
-      clsThemeColor(title: 'English', groupValue: language),
+      clsThemeColor(title: 'English', groupValue: language,remark: 'yes',has_internet: has_network),
+      clsThemeColor(title: 'Tagalog', groupValue: language,remark: has_tagalog?'yes':'no',has_internet: has_network),
+      clsThemeColor(title: 'Cebuano', groupValue: language,remark: has_cebuano?'yes':'no',has_internet: has_network),
     ];
 
     return SafeArea(
@@ -124,7 +128,7 @@ class SettingsStateless extends StatelessWidget {
                             child: SingleChildScrollView(
                               child: Column(
                                   children: cls_language.map((ef) =>
-                                      LanguageSwitcher(cls_language: ef, changeClick: reloadLanguageSelected)).toList()
+                                      LanguageSwitcher(cls_themeColor: ef, changeClick: reloadLanguageSelected)).toList()
                               ),
                             ),
                           );

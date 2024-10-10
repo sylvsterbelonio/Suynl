@@ -1,14 +1,24 @@
+import 'dart:async';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:get/get.dart';
+import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
+import 'package:suynl/classes/clsSetting.dart';
+import 'package:suynl/classes/clsThemeColor.dart';
+import 'package:suynl/classes/sql/sqlHelper.dart';
+import 'package:suynl/controller/GeneralController.dart';
+import 'package:suynl/controller/SOL2Controller.dart';
+import 'package:suynl/widgets/LanguageSwitcher.dart';
+import 'package:suynl/widgets/ads/BannerAds.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 import 'package:webview_flutter_android/webview_flutter_android.dart';
 import 'package:webview_flutter_wkwebview/webview_flutter_wkwebview.dart';
-import 'package:suynl/classes/Themes.dart';
 import 'package:suynl/classes/clsApp.dart';
+import 'package:suynl/models/LessonModel.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:suynl/classes/Themes.dart';
 
-import '../widgets/ads/BannerAds.dart';
-import 'Settings.dart';
 class LessonDetails extends StatefulWidget {
   const LessonDetails({super.key});
 
@@ -16,126 +26,148 @@ class LessonDetails extends StatefulWidget {
   State<LessonDetails> createState() => _LessonDetailsState();
 }
 
-class _LessonDetailsState extends State<LessonDetails> {
+class _LessonDetailsState extends State<LessonDetails> with SingleTickerProviderStateMixin{
 
-  int _currentFontSize = 1;
-  bool _fontDecrease = true;
-  bool _fontIncrease = true;
-  String language = 'English';
+  final SOL2Controller _sol1Controller = Get.put(SOL2Controller());
+  final GeneralController _generalController = Get.put(GeneralController());
+  late TabController _controller = TabController(length: 2, vsync: this);
+  late String colorTheme = clsApp.defaultThemeColor;
+  StreamSubscription? _internetConnectionStreamSubscription;
+  late String appTitle = 'Lesson 1';
+  late String language = clsApp.defaultLanguage;
+  late int lesson_id = 0;
+  late String lesson_type = '';
+  late bool has_tagalog = false;
+  late bool has_cebuano = false;
+  late List<clsThemeColor> cls_language = [];
+  List<clsSetting> clsSettings = [];
+  late bool has_network = false;
 
   @override
   void initState() {
     reloadTheme();
     super.initState();
+    _controller = TabController(length: 2, vsync: this);
+    _controller.addListener(() {
+      setState(() {
+      });
+    });
   }
-
+  void internet_config(){
+    _internetConnectionStreamSubscription = InternetConnection().onStatusChange.listen((event) {
+      switch (event) {
+        case InternetStatus.connected:
+          setState(() {
+            has_network = true;
+            _generalController.isConnectedToInternet.value = true;
+            // Get.snackbar(
+            //     'Online',
+            //     'You are now connected!',
+            //     snackPosition: SnackPosition.BOTTOM,
+            //     backgroundColor: Colors.black,
+            //     colorText: Colors.white
+            // );
+          });
+          break;
+        case InternetStatus.disconnected:
+          setState(() {
+            has_network=false;
+            // Get.snackbar(
+            //     'Offline',
+            //     'You are disconnected from the internet.',
+            //     snackPosition: SnackPosition.BOTTOM,
+            //     backgroundColor: Colors.black,
+            //     colorText: Colors.white
+            // );
+          });
+          break;
+        default:
+          setState(() {
+            has_network=false;
+          });
+          break;
+      }
+    });
+  }
+  Future<bool> hasNetwork() async {
+    try {
+      final result = await InternetAddress.lookup('example.com');
+      return result.isNotEmpty && result[0].rawAddress.isNotEmpty;
+    } on SocketException catch (_) {
+      return false;
+    }
+  }
   void reloadTheme() async{
     final SharedPreferences prefs = await SharedPreferences.getInstance();
-    _currentFontSize = prefs.getInt('fontSize') ?? 1;
-    if(_currentFontSize==0) _fontDecrease=false;
-    else if(_currentFontSize==2) _fontIncrease=false;
+    _generalController.onInit();
     colorTheme = prefs.getString('colorThemes') ?? clsApp.defaultThemeColor;
     language = prefs.getString('defaultLanguage') ?? clsApp.defaultLanguage;
+    has_tagalog = await sqlHelper.checkMaterialBookIfExist(20);
+    has_cebuano = await sqlHelper.checkMaterialBookIfExist(4);
+
+    has_network = _generalController.isConnectedToInternet.value;
+    cls_language = [
+      clsThemeColor(title: 'English', groupValue: language,remark: 'yes',has_internet: has_network),
+      clsThemeColor(title: 'Tagalog', groupValue: language,remark: has_tagalog?'yes':'no',has_internet: has_network),
+      clsThemeColor(title: 'Cebuano', groupValue: language,remark: has_cebuano?'yes':'no',has_internet: has_network),
+    ];
+    clsSettings = [
+      clsSetting(icon: 'language',title: 'Language', rightBox: language,color: colorTheme),
+    ];
+    internet_config();
+    //print('select lang->'+language);
     setState(() {});
   }
-  void updateFontSize() async{
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.setInt('fontSize', _currentFontSize);
-  }
-
-
-  List<String> availableFontSize = ['_sm','','_lg'];
-  String getLessonFile(String lessonNo){
-
-    var brightness = MediaQuery.of(context).platformBrightness;
-    bool isDarkMode = brightness == Brightness.dark;
-
-    String fileName='';
-
-      switch(lessonNo) {
-        case '0':
-          fileName = !isDarkMode ? "sl_00_introduction"+availableFontSize[_currentFontSize]+".html" : "sl_00_dark_introduction"+availableFontSize[_currentFontSize]+".html";
-          //fileName = "ex_00_pasiuna_alt.html";
-          break;
-        case '1':
-          fileName = !isDarkMode ? "sl_01_salvation"+availableFontSize[_currentFontSize]+".html" : "sl_01_dark_salvation"+availableFontSize[_currentFontSize]+".html";
-          //fileName = "ex_01_patukuranan_alt.html";
-          break;
-        case '2':
-          fileName = !isDarkMode ? "sl_02_repentance"+availableFontSize[_currentFontSize]+".html" : "sl_02_dark_repentance"+availableFontSize[_currentFontSize]+".html";
-          //fileName = "ex_02_kinabuhi_human_sa_kamatayon_alt.html";
-          break;
-        case '3':
-          fileName = !isDarkMode ? "sl_03_lordship"+availableFontSize[_currentFontSize]+".html" : "sl_03_dark_lordship"+availableFontSize[_currentFontSize]+".html";
-          //fileName = "ex_03_kaluwasan_alt.html";
-          break;
-        case '4':
-          fileName = !isDarkMode ? "sl_04_forgiveness"+availableFontSize[_currentFontSize]+".html" : "sl_04_dark_forgiveness"+availableFontSize[_currentFontSize]+".html";
-          //fileName = "ex_04_usa_lang_ka_dalan_alt.html";
-          break;
-        case '5':
-          fileName = !isDarkMode ? "sl_05_the_4_greatest_meetings"+availableFontSize[_currentFontSize]+".html" : "sl_05_dark_the_4_greatest_meetings"+availableFontSize[_currentFontSize]+".html";
-          //fileName = "ex_05_pagkatawo_pagusab_alt.html";
-          break;
-        case '6':
-          fileName = !isDarkMode ? "sl_06_devotional_life"+availableFontSize[_currentFontSize]+".html" : "sl_dark_06_devotional_life"+availableFontSize[_currentFontSize]+".html";
-          //fileName = "ex_06_tulo_ka_aspeto_sa_kaluwasan_alt.html";
-          break;
-        case '7':
-          fileName = !isDarkMode ? "sl_07_your_active_life_prayer"+availableFontSize[_currentFontSize]+".html" : "sl_07_dark_your_active_life_prayer"+availableFontSize[_currentFontSize]+".html";
-          //fileName = "ex_07_mga_pangutana_mahitungod_sa_kaluwasan_alt.html";
-          break;
-        case '8':
-          fileName = !isDarkMode ? "sl_08_sharing_your_new_life_with_others"+availableFontSize[_currentFontSize]+".html" : "sl_08_dark_sharing_your_new_life_with_others"+availableFontSize[_currentFontSize]+".html";
-          //fileName = "ex_08_kaluwasan_mawala_ba_o_dili_na_alt.html";
-          break;
-        case '9':
-          fileName = !isDarkMode ? "sl_09_life_of_obedience"+availableFontSize[_currentFontSize]+".html" : "sl_09_dark_life_of_obedience"+availableFontSize[_currentFontSize]+".html";
-          //fileName = "ex_09_ang_plano_sa_dios_alt.html";
-          break;
-        case '10':
-          fileName =  !isDarkMode ? "sl_10_life_in_the_church"+availableFontSize[_currentFontSize]+".html" : "sl_10_dark_life_in_the_church"+availableFontSize[_currentFontSize]+".html";
-          //fileName = "ex_10_paglakaw_uban_sa_dios_alt.html";
-          break;
-        case '11':
-          fileName =  !isDarkMode ? "ex_11_pito_ka_timailhan"+availableFontSize[_currentFontSize]+".html" : "ex_11_dark_pito_ka_timailhan"+availableFontSize[_currentFontSize]+".html";
-          //fileName = "ex_11_pito_ka_timailhan_alt.html";
-          break;
-        case '12':
-          fileName =  !isDarkMode ? "ex_12_pagkaginoo"+availableFontSize[_currentFontSize]+".html" : "ex_12_dark_pagkaginoo"+availableFontSize[_currentFontSize]+".html";
-          //fileName = "ex_12_pagkaginoo_alt.html";
-          break;
-      }
-      print(language + "/" + fileName);
-      return language + "/" + fileName;
-
-  }
-
-
-
-  late final WebViewController controller;
 
   @override
-  Widget build(BuildContext context) {
+  void dispose() {
+    if(_internetConnectionStreamSubscription!=null) _internetConnectionStreamSubscription?.cancel();
+    super.dispose();
+  }
 
 
-    final routeArgs = ModalRoute.of(context)?.settings.arguments as Map<String,String>;
-    final String lessonNo = routeArgs['lessonNo'].toString();
-    final String title = routeArgs['title'].toString();
-    late final WebViewController _controller;
-    String fileName='';
+  void getLessonQuestion(String lessonNo,String language, String lesson_type){
+      if(lessonNo.length==1) lessonNo = '0' + lessonNo;
+      int lesson_no = int.parse(lessonNo);
+      _sol1Controller.sel_lesson_no.value = lesson_no;
+      _sol1Controller.sel_lesson_id.value = _sol1Controller.selected_lesson.value.id.toInt();
+  }
+  void reloadLanguageSelected(String value) async{
+    Navigator.pop(context);
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setString('defaultLanguage', value);
 
-    fileName = getLessonFile(lessonNo);
 
-      late final PlatformWebViewControllerCreationParams params;
-      if (WebViewPlatform.instance is WebKitWebViewPlatform) {
-        params = WebKitWebViewControllerCreationParams(
-          allowsInlineMediaPlayback: true,
-          mediaTypesRequiringUserAction: const <PlaybackMediaTypes>{},
-        );
-      } else {
-        params = const PlatformWebViewControllerCreationParams();
-      }
+    language = value;
+    _sol1Controller.language.value = value;
+    has_tagalog = await sqlHelper.checkMaterialBookIfExist(20);
+    has_cebuano = await sqlHelper.checkMaterialBookIfExist(4);
+    has_network = _generalController.isConnectedToInternet.value;
+    cls_language = [
+      clsThemeColor(title: 'English', groupValue: language,remark: 'yes',has_internet: has_network),
+      clsThemeColor(title: 'Tagalog', groupValue: language,remark: has_tagalog?'yes':'no',has_internet: has_network),
+      clsThemeColor(title: 'Cebuano', groupValue: language,remark: has_cebuano?'yes':'no',has_internet: has_network),
+    ];
+    //print('select lang->'+language);
+    setState(() {});
+  }
+
+  Widget getBody(LessonModel data, int lesson_no){
+
+    late final WebViewController _controller_page;
+    late String sampleHtml = '''
+                            ''' +  data.content + '''                                                                   
+                            ''';
+
+    late final PlatformWebViewControllerCreationParams params;
+    if (WebViewPlatform.instance is WebKitWebViewPlatform) {
+      params = WebKitWebViewControllerCreationParams(
+        allowsInlineMediaPlayback: true,
+        mediaTypesRequiringUserAction: const <PlaybackMediaTypes>{},
+      );
+    } else {
+      params = const PlatformWebViewControllerCreationParams();
+    }
     final WebViewController controller =
     WebViewController.fromPlatformCreationParams(params);
     if (controller.platform is AndroidWebViewController) {
@@ -144,68 +176,100 @@ class _LessonDetailsState extends State<LessonDetails> {
           .setMediaPlaybackRequiresUserGesture(false);
     }
 
-      controller
-        ..setJavaScriptMode(JavaScriptMode.unrestricted)
-        ..enableZoom(true)
-        ..runJavaScript('<script>setFontSize('+ availableFontSize[_currentFontSize] +');</script>')
-        ..loadFlutterAsset('assets/files/'+fileName);
+    controller
+      ..setJavaScriptMode(JavaScriptMode.unrestricted)
+      ..enableZoom(true)
+      ..loadHtmlString(sampleHtml);
 
-      // #docregion platform_features
-      if (controller.platform is AndroidWebViewController) {
-        AndroidWebViewController.enableDebugging(true);
-        (controller.platform as AndroidWebViewController)
-            .setMediaPlaybackRequiresUserGesture(false);
-      }
+    // #docregion platform_features
+    if (controller.platform is AndroidWebViewController) {
+      AndroidWebViewController.enableDebugging(true);
+      (controller.platform as AndroidWebViewController)
+          .setMediaPlaybackRequiresUserGesture(false);
+    }
 
-      // #enddocregion platform_features
-      _controller = controller;
+    _controller_page = controller;
+
+    return Padding(
+      padding: EdgeInsets.all(0),
+      child: Column(
+          children: [
+
+            Expanded(
+              child: RawScrollbar(child: WebViewWidget(controller: _controller_page)),
+            ),
+            BannerAds(),
+          ]),
+    );
 
 
+
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    var brightness = MediaQuery.of(context).platformBrightness;
+    bool isDarkMode = brightness == Brightness.dark;
+
+    final routeArgs = ModalRoute.of(context)?.settings.arguments as Map<String,String>;
+    final String lessonNo = routeArgs['lessonNo'].toString();
+    lesson_type =  routeArgs['lesson_type'].toString();
+    final title = routeArgs['title'].toString();
 
     return Scaffold(
       appBar: AppBar(
-      title:  Text(lessonNo + ': ' + title),
-      actions: [
-        IconButton(onPressed: _fontDecrease ?  (){
-        setState(() {
-            int index = _currentFontSize - 1;
-              if (index <= 0) {
-                _currentFontSize = 0;
-                _fontDecrease = false;
-              } else {
-                _fontIncrease=true;
-                _currentFontSize--;
-              }
-            print(_currentFontSize);
-            updateFontSize();
-            });
-            }: null,
-            icon: Icon(Icons.text_decrease,
-            color:  _fontDecrease ? Colors.white: Colors.grey[400])),
+        title: Text(lesson_type + " " + lessonNo + ': ' + title),
+        actions: [
+          IconButton(onPressed: () async{
+            await showModalBottomSheet(context: context, builder: (context){
+              return SafeArea(
+                child: SingleChildScrollView(
+                  child: Column(
+                    children:[
+                      Container(
+                        width:double.infinity,
+                        decoration: BoxDecoration(
+                          border:Border(
+                            bottom: BorderSide(
+                              color: Colors.grey.withOpacity(0.4)
+                            )
+                          )
 
-        IconButton(onPressed: _fontIncrease ? (){
-          setState(() {
-            int index = _currentFontSize + 1;
-            if(index>1){
-              _currentFontSize = 2;
-              _fontIncrease = false;
-            }else {
-              _currentFontSize++;
-              _fontDecrease=true;
-            }
+                        ),
+                        child: Padding(
+                            padding:EdgeInsets.all(20),
+                            child: Text('Select Language:')),
+                      ),
+                      Column(
+                        children: cls_language.map((ef) =>
+                            LanguageSwitcher(cls_themeColor: ef, changeClick: reloadLanguageSelected)).toList()
+                    )],
+                  ),
+                ),
+              );
             });
-          print(_currentFontSize);
-          updateFontSize();
-        }: null,
-            icon: Icon(Icons.text_increase,
-            color: _fontIncrease ? Colors.white: Colors.grey[400])),
-      ],
-      backgroundColor: myThemes.getColor(colorTheme),
+
+          }, icon: Icon(Icons.translate))
+         ],
+        backgroundColor: isDarkMode? null:  myThemes.getColor(colorTheme),
       ),
-      body:  Column(children: [
-        Expanded(child: WebViewWidget(controller: _controller,)),
-        // BannerAds()
-      ]),
+      body: Column(
+        children: [
+          Expanded(
+            child: FutureBuilder<LessonModel>(
+            future: sqlHelper().get_material_lessons_by_id(lessonNo,language,lesson_type),
+            builder: (BuildContext context, AsyncSnapshot snapshot){
+              if(snapshot.hasData){
+                _sol1Controller.selected_lesson.value = snapshot.data;
+                return getBody(snapshot.data!,int.parse(lessonNo));
+              }
+              else
+                return const Center(child: CircularProgressIndicator());
+            },
+            ),
+          )
+        ]),
+
     );
   }
 }
